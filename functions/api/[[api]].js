@@ -29,7 +29,7 @@ export async function onRequest({request, env}) {
             if (request.method === 'GET' && env.CACHE_KEYS) {
                 response = new Response(response.body, response);
                 response.headers.append("Cache-Control", "s-maxage=31536000");
-                await env.CACHE_KEYS.put(cacheKey.url, 'true'); // Store the key with any value (e.g., 'true')
+                await env.CACHE_KEYS.put(cacheKey.url, 'true');
                 await cache.put(cacheKey, response.clone());
             }
         } else {
@@ -60,13 +60,13 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
             return;
         }
 
-        const prefix = `http://${env.TRACCAR_SERVER}/${pathname}`
+        const prefix = `http://${env.TRACCAR_SERVER}${pathname}`
         // List all keys in the KV store with the pathname prefix
         let keys = await env.CACHE_KEYS.list({ prefix });
 
         if (keys.keys.length === 0) {
             console.log(`No cache keys found for prefix: ${prefix}`);
-            keys = await env.CACHE_KEYS.list({ prefix });
+            keys = await env.CACHE_KEYS.list();
             for (let key of keys.keys) {
                 console.log(key.name)
             }
