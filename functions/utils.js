@@ -26,12 +26,10 @@ export async function forwardWithCache({request, env}) {
         const url = new URL(request.url)
         const jSessionId = getJSessionId(request)
         if (jSessionId) { url.searchParams.set('JSESSIONID', jSessionId) }
-
         const cacheKey = url.toString();
         let body = env.CACHE_KEYS && await env.CACHE_KEYS.get(cacheKey)
-
         if (!body || request.method !== 'GET' || request.headers.get('Authorization')) {
-            console.log(`cache miss: ${cacheKey}`,);
+            console.log(`cache miss: ${cacheKey}`);
             const response = await forward({request, env})
             if (!response.ok) {
                 console.error(response.status, await response.text())
@@ -51,47 +49,20 @@ export async function forwardWithCache({request, env}) {
     }
 }
 
-export async function invalidateSession(jSessionId, env) {
+export async function invalidateCache(env, filter= '', prefix= '') {
     try {
         if (!env.CACHE_KEYS) {
             console.warn('KV namespace CACHE_KEYS is not available.');
             return;
         }
-
-        let keys = await env.CACHE_KEYS.list();
-        if (keys.keys.length === 0) { console.log(`No cache keys found in cache`); }
-
-        await Promise.all(keys.keys.filter(k => k.name.includes(jSessionId)).map(async k => {
-            await env.CACHE_KEYS.delete(k.name);
-            console.log(`Cache key deleted from KV: ${k.name}`);
-        }))
-    } catch (e) {
-        console.error('Cache invalidation error:', e);
-    }
-}
-
-
-export async function invalidatePath(url, env, prefix= '', ) {
-    try {
-        if (!env.CACHE_KEYS) {
-            console.warn('KV namespace CACHE_KEYS is not available.');
-            return;
-        }
-
-        const prefix = getBaseUrl(url)
         let keys = await env.CACHE_KEYS.list({ prefix });
-
-        if (keys.keys.length === 0) {
-            console.log(`No cache keys found for prefix: ${prefix}`);
-        }
-
-        // Invalidate each key found
-        await Promise.all(keys.keys.map(async k => {
+        if (keys.keys.length === 0) { console.log(`No cache found for prefix: ${prefix} and filter: ${filter}`) }
+        await Promise.all(keys.keys.filter(k => !filter || k.name.includes(filter)).map(async k => {
             await env.CACHE_KEYS.delete(k.name);
             console.log(`Cache key deleted from KV: ${k.name}`);
         }))
     } catch (e) {
-        console.error('Cache invalidation error:', e);
+        console.error('Cache delete error:', e);
     }
 }
 
