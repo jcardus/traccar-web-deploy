@@ -1,2 +1,5 @@
 
 /.idea
+/.wrangler
+/node_modules
+wrangler.toml

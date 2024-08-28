@@ -1,4 +1,7 @@
 export async function onRequest({ request, env }) {
+    if (!env.ICONS_3D_BASE_URL) {
+        return format({request, env})
+    }
     const url = new URL(request.url);
     const rewrittenUrl = new URL(`${env.ICONS_3D_BASE_URL}/${url.pathname.replace("/icons3d/", "")}`);
 

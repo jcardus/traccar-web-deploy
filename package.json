@@ -6,7 +6,8 @@
   "scripts": {
     "prebuild": "./prebuild.sh",
     "build": "cd traccar-web && npm install && npm run generate-pwa-assets && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "wrangler pages dev traccar-web/build --binding TRACCAR_SERVER=$TRACCAR_SERVER"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/jcardus/traccar-cloudflare/issues"
   },
-  "homepage": "https://github.com/jcardus/traccar-cloudflare#readme"
+  "homepage": "https://github.com/jcardus/traccar-cloudflare#readme",
+  "dependencies": {
+    "wrangler": "^3.72.3"
+  }
 }
