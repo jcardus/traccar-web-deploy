@@ -1,24 +1,39 @@
 export async function onRequest({request, env}) {
     const url = new URL(request.url)
-    console.log(url)
+    const cookie = request.headers.get('Cookie') || '';
+
     if (url.pathname === '/api/positions' && env.POSITIONS_SERVER) {
-        const cookies = request.headers.get('Cookie') || ''
-        const jSessionId = getCookie(cookies, 'JSESSIONID')
+        const jSessionId = getCookie(cookie, 'JSESSIONID')
         if (jSessionId) {
             url.searchParams.set('JSESSIONID', jSessionId)
         }
         url.hostname = env.POSITIONS_SERVER
         return Response.redirect(url, 302)
     }
-    url.host = env.TRACCAR_SERVER
-    url.protocol = 'http:'
-    const response = await fetch(new Request(url, request))
-    if (!response.ok) {
-        console.error(response.status, await response.text())
-        return new Response('server error ' + response.status, { status: response.status });
+
+    const auth = request.headers.get('Authorization') || '';
+    const cacheKey = new Request(
+        `${url.toString()}${url.search ? '&' : '?'}cookie=${encodeURIComponent(cookie)}&auth=${encodeURIComponent(auth)}`,
+        { method: request.method, headers: request.headers }
+    );
+    const cache = caches.default;
+    let response = await cache.match(cacheKey);
+
+    if (!response || request.method !== 'GET') {
+        console.log(`${cacheKey} not present in cache. Fetching and caching request.`,);
+        url.host = env.TRACCAR_SERVER
+        url.protocol = 'http:'
+        response = await fetch(new Request(url, request))
+        if (!response.ok) {
+            console.error(response.status, await response.text())
+            return new Response('server error ' + response.status, {status: response.status});
+        }
+        response.headers.append("Cache-Control", "s-maxage=10");
+        ctx.waitUntil(cache.put(cacheKey, response.clone()));
     } else {
-        return response
+        console.log(`Cache hit for: ${cacheKey}.`);
     }
+    return response
 }
 
 function getCookie(cookies, name) {
