@@ -60,12 +60,16 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
             return;
         }
 
+        const prefix = `http://${env.TRACCAR_SERVER}/${pathname}`
         // List all keys in the KV store with the pathname prefix
-        const listOptions = { prefix: `http://${env.TRACCAR_SERVER}/${pathname}` };
-        let keys = await env.CACHE_KEYS.list(listOptions);
+        let keys = await env.CACHE_KEYS.list({ prefix });
 
         if (keys.keys.length === 0) {
-            console.log(`No cache keys found for pathname: ${pathname}`);
+            console.log(`No cache keys found for prefix: ${prefix}`);
+            keys = await env.CACHE_KEYS.list({ prefix });
+            for (let key of keys.keys) {
+                console.log(key.name)
+            }
             return;
         }
 
