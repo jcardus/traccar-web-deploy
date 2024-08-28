@@ -1,26 +1,18 @@
 export async function onRequest({request, env}) {
     try {
         const url = new URL(request.url)
-        const cookie = request.headers.get('Cookie') || '';
-
+        const jSessionId = getCookie(request.headers.get('Cookie'), 'JSESSIONID')
+        if (jSessionId) { url.searchParams.set('JSESSIONID', jSessionId) }
         if (url.pathname === '/api/positions' && env.POSITIONS_SERVER) {
-            const jSessionId = getCookie(cookie, 'JSESSIONID')
-            if (jSessionId) {
-                url.searchParams.set('JSESSIONID', jSessionId)
-            }
             url.hostname = env.POSITIONS_SERVER
             return Response.redirect(url, 302)
         }
-
-        const auth = request.headers.get('Authorization') || '';
-        const cacheKey = new Request(
-            `${url.toString()}${url.search ? '&' : '?'}cookie=${encodeURIComponent(cookie)}&auth=${encodeURIComponent(auth)}`
-        );
+        const cacheKey = new Request(`${url.pathname}${url.search}`);
         const cache = caches.default;
         let response = await cache.match(cacheKey);
 
-        if (!response || request.method !== 'GET') {
-            console.log(`${cacheKey.url} not present in cache. Fetching and caching request.`,);
+        if (!response || request.method !== 'GET' || request.headers.get('Authorization')) {
+            console.log(`cache miss: ${cacheKey.url}`,);
             url.host = env.TRACCAR_SERVER
             url.protocol = 'http:'
             response = await fetch(new Request(url, request))
@@ -30,11 +22,11 @@ export async function onRequest({request, env}) {
             }
             if (request.method === 'GET') {
                 response = new Response(response.body, response);
-                response.headers.append("Cache-Control", "s-maxage=10");
+                response.headers.append("Cache-Control", "s-maxage=31536000");
                 await cache.put(cacheKey, response.clone());
             }
         } else {
-            console.log(`Cache hit for: ${cacheKey.url}.`);
+            console.log(`cache hit: ${cacheKey.url}.`);
         }
         return response
     } catch (e) {
@@ -43,7 +35,7 @@ export async function onRequest({request, env}) {
     }
 }
 
-function getCookie(cookies, name) {
+function getCookie(cookies = '', name) {
     const cookieArr = cookies.split(';')
     for (let cookie of cookieArr) {
         const [key, value] = cookie.trim().split('=')
