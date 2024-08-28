@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "./prebuild.sh",
-    "build": "cd traccar-web && npm install && npm run generate-pwa-assets && npm run build",
+    "build": "cd traccar-web && npm install @sentry/react && npm run generate-pwa-assets && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "wrangler pages dev traccar-web/build --binding TRACCAR_SERVER=$TRACCAR_SERVER"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/jcardus/traccar-cloudflare#readme",
   "dependencies": {
+    "@sentry/react": "^8.27.0",
     "wrangler": "^3.72.3"
   }
 }
