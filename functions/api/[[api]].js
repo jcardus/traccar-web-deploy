@@ -28,8 +28,11 @@ export async function onRequest({request, env}) {
             console.error(response.status, await response.text())
             return new Response('server error ' + response.status, {status: response.status});
         }
-        response.headers.append("Cache-Control", "s-maxage=10");
-        ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        if (request.method !== 'GET') {
+            response = new Response(response.body, response);
+            response.headers.append("Cache-Control", "s-maxage=10");
+            ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        }
     } else {
         console.log(`Cache hit for: ${cacheKey}.`);
     }
