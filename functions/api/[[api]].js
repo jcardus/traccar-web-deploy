@@ -61,22 +61,16 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
         }
 
         const prefix = `http://${env.TRACCAR_SERVER}${pathname}`
-        // List all keys in the KV store with the pathname prefix
         let keys = await env.CACHE_KEYS.list({ prefix });
 
         if (keys.keys.length === 0) {
             console.log(`No cache keys found for prefix: ${prefix}`);
-            keys = await env.CACHE_KEYS.list();
-            for (let key of keys.keys) {
-                console.log(key.name)
-            }
-            return;
         }
 
         const cache = caches.default;
 
         // Invalidate each key found
-        for (let key of keys.keys) {
+        await Promise.all(keys.keys.map(async key => {
             const cacheKeyUrl = key.name;
             const cacheKey = new Request(cacheKeyUrl);
 
@@ -91,7 +85,7 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
             } else {
                 console.warn(`Cache key not found in cache: ${cacheKeyUrl}`);
             }
-        }
+        }))
     } catch (e) {
         console.error('Cache invalidation error:', e);
     }
