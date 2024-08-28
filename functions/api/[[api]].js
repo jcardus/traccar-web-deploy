@@ -1,12 +1,11 @@
+import {getCookie} from "../utils";
+
 export async function onRequest({request, env}) {
     try {
         const url = new URL(request.url)
         const jSessionId = getCookie(request.headers.get('Cookie'), 'JSESSIONID')
         if (jSessionId) { url.searchParams.set('JSESSIONID', jSessionId) }
-        if (url.pathname === '/api/positions' && env.POSITIONS_SERVER) {
-            url.hostname = env.POSITIONS_SERVER
-            return Response.redirect(url, 302)
-        }
+
         url.host = env.TRACCAR_SERVER
         url.protocol = 'http:'
         const cacheKey = new Request(url.toString());
@@ -42,16 +41,7 @@ export async function onRequest({request, env}) {
     }
 }
 
-function getCookie(cookies = '', name) {
-    const cookieArr = cookies.split(';')
-    for (let cookie of cookieArr) {
-        const [key, value] = cookie.trim().split('=')
-        if (key === name) {
-            return value
-        }
-    }
-    return null
-}
+
 
 async function invalidateAllCacheKeysForPathname(pathname, env) {
     try {
