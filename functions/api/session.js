@@ -1,9 +1,7 @@
 import {forwardWithCache, getJSessionId, invalidateSession} from "../utils";
 
 export async function onRequest({request, env}) {
-    const url = new URL(request.url);
-    const pattern = new URLPattern({ pathname: '/api/session/:id' });
-    const match = pattern.exec(url.toString());
+    const match = new URLPattern({ pathname: '/api/session/:id' }).exec(request.url);
     if (request.method !== 'GET' || match) {
         await invalidateSession(getJSessionId(request), env);
     }
