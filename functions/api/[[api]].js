@@ -1,4 +1,4 @@
-export async function onRequest({request, env}) {
+export async function onRequest({request, env, ctx}) {
     try {
         const url = new URL(request.url)
         const cookie = request.headers.get('Cookie') || '';
