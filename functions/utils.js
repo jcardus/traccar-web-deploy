@@ -33,14 +33,14 @@ export async function forwardWithCache({request, env}) {
 
         let response = await cache.match(cacheKey);
 
-        if (!response || request.method !== 'GET' || request.headers.get('Authorization')) {
+        if (!response || request.method !== 'GET' || request.headers.get('Authorization') || !env.CACHE_ENABLED) {
             console.log(`cache miss: ${cacheKey.url}`,);
             response = await fetch(new Request(url, request))
             if (!response.ok) {
                 console.error(response.status, await response.text())
                 return new Response('Error ' + response.status, {status: response.status});
             }
-            if (request.method === 'GET' && env.CACHE_KEYS) {
+            if (request.method === 'GET' && env.CACHE_KEYS && env.CACHE_ENABLED) {
                 response = new Response(response.body, response);
                 response.headers.append("Cache-Control", "s-maxage=31536000");
                 await env.CACHE_KEYS.put(cacheKey.url, 'true');
@@ -58,7 +58,7 @@ export async function forwardWithCache({request, env}) {
 
 export async function invalidateSession(jSessionId, env) {
     try {
-        if (!env.CACHE_KEYS) {
+        if (!env.CACHE_KEYS || !env.CACHE_ENABLED) {
             console.warn('KV namespace CACHE_KEYS is not available.');
             return;
         }
