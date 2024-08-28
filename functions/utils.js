@@ -31,11 +31,6 @@ export async function forwardWithCache({request, env}) {
         const cacheKey = new Request(url.toString());
         const cache = caches.default;
 
-        if (request.method !== 'GET') {
-            console.log(`Invalidating all cache keys due to ${request.method} ${url.pathname}`);
-            await invalidateAllCacheKeysForPathname(getBasePath(url.pathname), env);
-        }
-
         let response = await cache.match(cacheKey);
 
         if (!response || request.method !== 'GET' || request.headers.get('Authorization')) {
@@ -101,7 +96,7 @@ export async function invalidateSession(jSessionId, env) {
 }
 
 
-async function invalidateAllCacheKeysForPathname(pathname, env) {
+export async function invalidatePath(pathname, env) {
     try {
         if (!env.CACHE_KEYS) {
             console.warn('KV namespace CACHE_KEYS is not available.');
@@ -139,7 +134,7 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
     }
 }
 
-function getBasePath(pathname) {
+export function getBasePath(pathname) {
     // Extract the base API path (e.g., /api/devices from /api/devices/0)
     const pathSegments = pathname.split('/');
     if (pathSegments.length > 2) {
