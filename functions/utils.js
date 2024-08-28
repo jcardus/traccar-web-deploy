@@ -17,7 +17,7 @@ export function forward ({request, env}) {
 }
 
 export function getJSessionId(request) {
-    return getCookie(request.headers.get('Cookie'), 'JSESSIONID');
+    return getCookie(request.headers.get('Cookie') || '', 'JSESSIONID');
 }
 
 export async function forwardWithCache({request, env}) {
@@ -97,7 +97,7 @@ export async function invalidateSession(jSessionId, env) {
 
 export async function invalidatePath(pathname, env) {
     try {
-        if (!env.CACHE_KEYS || !env.CACHE_ENABLED) {
+        if (!env.CACHE_KEYS) {
             console.warn('KV namespace CACHE_KEYS is not available.');
             return;
         }
