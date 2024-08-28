@@ -63,7 +63,6 @@ export async function invalidateSession(jSessionId, env) {
             return;
         }
 
-
         const prefix = `http://${env.TRACCAR_SERVER}`
         let keys = await env.CACHE_KEYS.list({ prefix });
 
@@ -98,7 +97,7 @@ export async function invalidateSession(jSessionId, env) {
 
 export async function invalidatePath(pathname, env) {
     try {
-        if (!env.CACHE_KEYS) {
+        if (!env.CACHE_KEYS || !env.CACHE_ENABLED) {
             console.warn('KV namespace CACHE_KEYS is not available.');
             return;
         }
