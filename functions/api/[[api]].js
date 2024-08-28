@@ -14,8 +14,7 @@ export async function onRequest({request, env, ctx}) {
 
         const auth = request.headers.get('Authorization') || '';
         const cacheKey = new Request(
-            `${url.toString()}${url.search ? '&' : '?'}cookie=${encodeURIComponent(cookie)}&auth=${encodeURIComponent(auth)}`,
-            {method: request.method, headers: request.headers}
+            `${url.toString()}${url.search ? '&' : '?'}cookie=${encodeURIComponent(cookie)}&auth=${encodeURIComponent(auth)}`
         );
         const cache = caches.default;
         let response = await cache.match(cacheKey);
@@ -29,7 +28,7 @@ export async function onRequest({request, env, ctx}) {
                 console.error(response.status, await response.text())
                 return new Response('Error ' + response.status, {status: response.status});
             }
-            if (request.method !== 'GET') {
+            if (request.method === 'GET') {
                 response = new Response(response.body, response);
                 response.headers.append("Cache-Control", "s-maxage=10");
                 ctx.waitUntil(cache.put(cacheKey, response.clone()));
