@@ -1,4 +1,4 @@
-export async function onRequest({request, env, ctx}) {
+export async function onRequest({request, env}) {
     try {
         const url = new URL(request.url)
         const cookie = request.headers.get('Cookie') || '';
@@ -31,7 +31,7 @@ export async function onRequest({request, env, ctx}) {
             if (request.method === 'GET') {
                 response = new Response(response.body, response);
                 response.headers.append("Cache-Control", "s-maxage=10");
-                ctx.waitUntil(cache.put(cacheKey, response.clone()));
+                await cache.put(cacheKey, response.clone());
             }
         } else {
             console.log(`Cache hit for: ${cacheKey.url}.`);
