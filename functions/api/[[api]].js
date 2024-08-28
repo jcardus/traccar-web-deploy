@@ -14,7 +14,7 @@ export async function onRequest({request, env}) {
 
         if (request.method !== 'GET') {
             console.log(`Invalidating all cache keys for pathname due to ${request.method} request: ${url.pathname}`);
-            await invalidateAllCacheKeysForPathname(url.pathname, env);
+            await invalidateAllCacheKeysForPathname(getBasePath(url.pathname), env);
         }
 
         let response = await cache.match(cacheKey);
@@ -61,7 +61,7 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
         }
 
         // List all keys in the KV store with the pathname prefix
-        const listOptions = { prefix: pathname };
+        const listOptions = { prefix: `http://${env.TRACCAR_SERVER}/${pathname}` };
         let keys = await env.CACHE_KEYS.list(listOptions);
 
         if (keys.keys.length === 0) {
@@ -93,3 +93,11 @@ async function invalidateAllCacheKeysForPathname(pathname, env) {
     }
 }
 
+function getBasePath(pathname) {
+    // Extract the base API path (e.g., /api/devices from /api/devices/0)
+    const pathSegments = pathname.split('/');
+    if (pathSegments.length > 2) {
+        return `/${pathSegments[1]}/${pathSegments[2]}`;
+    }
+    return pathname;
+}
