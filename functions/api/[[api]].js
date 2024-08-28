@@ -21,7 +21,7 @@ export async function onRequest({request, env}) {
         let response = await cache.match(cacheKey);
 
         if (!response || request.method !== 'GET') {
-            console.log(`${cacheKey} not present in cache. Fetching and caching request.`,);
+            console.log(`${cacheKey.url} not present in cache. Fetching and caching request.`,);
             url.host = env.TRACCAR_SERVER
             url.protocol = 'http:'
             response = await fetch(new Request(url, request))
@@ -35,7 +35,7 @@ export async function onRequest({request, env}) {
                 ctx.waitUntil(cache.put(cacheKey, response.clone()));
             }
         } else {
-            console.log(`Cache hit for: ${cacheKey}.`);
+            console.log(`Cache hit for: ${cacheKey.url}.`);
         }
         return response
     } catch (e) {
