@@ -5,7 +5,7 @@ export async function onRequest({request, env}) {
     const pattern = new URLPattern({ pathname: '/api/session/:id' });
     const match = pattern.exec(url);
     if (request.method !== 'GET' || match) {
-        await invalidateSession(getJSessionId(request));
+        await invalidateSession(getJSessionId(request), env);
     }
     return forwardWithCache({request, env});
 }
