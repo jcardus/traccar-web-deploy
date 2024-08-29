@@ -6,9 +6,13 @@ cp -vr src public traccar-web
   cat traccar-web/src/index.jsx
 } > temp && mv temp traccar-web/src/index.jsx
 
-if [ -z "${LOGO}" ]; then
-  echo "${LOGO}" > traccar-web/public/logo.svg
+if [ -n "${LOGO_URL}" ]; then
+  curl "${LOGO_URL}" > traccar-web/public/logo.svg
 fi
+if [ -n "${LOGO_LARGE_URL}" ]; then
+  curl "${LOGO_LARGE_URL}" > traccar-web/src/resources/images/logo.svg
+fi
+
 
 FILES=("traccar-web/vite.config.js" "traccar-web/index.html")
 for FILE in "${FILES[@]}"; do
