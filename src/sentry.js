@@ -5,5 +5,5 @@ Sentry.init({
         Sentry.browserTracingIntegration()
     ],
     tracesSampleRate: 1.0,
-    tracePropagationTargets: ["localhost", /https:\/\/web.rastreosat.com.br\/api/]
+    tracePropagationTargets: ["localhost", /^https:\/\/web.rastreosat.com.br\/api/]
 });
