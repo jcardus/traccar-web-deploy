@@ -6,6 +6,10 @@ cp -vr src public traccar-web
   cat traccar-web/src/index.jsx
 } > temp && mv temp traccar-web/src/index.jsx
 
+if [ -z "${LOGO}" ]; then
+  echo "${LOGO}" > traccar-web/public/logo.svg
+fi
+
 FILES=("traccar-web/vite.config.js" "traccar-web/index.html")
 for FILE in "${FILES[@]}"; do
     sed -i "s|\${title}|$TITLE|g" "$FILE" || true
