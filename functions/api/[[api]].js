@@ -11,6 +11,6 @@ export async function onRequest({request, params, env, functionPath}) {
     return forwardWithCache(
         {request, env},
         jSessionId,
-        Date().getTime() - lastInvalid < 1000 * 60
+        new Date().getTime() - lastInvalid < 1000 * 60
     );
 }
