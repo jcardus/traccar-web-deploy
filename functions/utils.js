@@ -51,14 +51,16 @@ export async function forwardWithCache({request, env}) {
 
 export async function invalidateCache(env, filter= '', prefix= '') {
     try {
+        if (filter) {
+            await env.CACHE_KEYS.put(filter, new Date().getTime())
+        }
         await env.INVALIDATE_QUEUE.send({filter, prefix});
     } catch (e) {
         console.error(e);
     }
 }
 
-export function getBaseUrl(_url) {
+export function getBaseUrl(_url, entity) {
     const url = new URL(_url)
-    const pathSegments = url.pathname.split('/');
-    return url.origin + (pathSegments.length > 2 ? `/${pathSegments[1]}/${pathSegments[2]}` : '');
+    return `${url.origin}/api/${entity}`
 }
