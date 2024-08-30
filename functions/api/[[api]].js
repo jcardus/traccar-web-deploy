@@ -7,9 +7,5 @@ export async function onRequest({request, params, env, functionPath}) {
         return forward({request, env})
     }
     const lastInvalid = await env.CACHE_KEYS.get(getJSessionId(request))
-    if (new Date().getTime() - lastInvalid > 1000 * 60) {
-        return forwardWithCache({request, env});
-    }
-    console.log(params.api[0], 'waiting 1 minute for cache invalidation')
-    return forward({request, env});
+    return forwardWithCache({request, env}, new Date().getTime() - lastInvalid < 1000 * 60);
 }

@@ -21,14 +21,14 @@ export function getJSessionId(request) {
     return getCookie(request.headers.get('Cookie') || '', 'JSESSIONID');
 }
 
-export async function forwardWithCache({request, env}) {
+export async function forwardWithCache({request, env}, bypassCache) {
     try {
         const url = new URL(request.url)
         const jSessionId = getJSessionId(request)
         if (jSessionId) { url.searchParams.set('JSESSIONID', jSessionId) }
         const cacheKey = url.toString();
         let body = env.CACHE_KEYS && await env.CACHE_KEYS.get(cacheKey)
-        if (!body || request.method !== 'GET' || request.headers.get('Authorization')) {
+        if (bypassCache || !body || request.method !== 'GET' || request.headers.get('Authorization')) {
             console.log(`cache miss: ${cacheKey}`);
             const response = await forward({request, env})
             if (!response.ok) {

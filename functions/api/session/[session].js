@@ -1,6 +1,6 @@
-import {forwardWithCache, getJSessionId, invalidateCache} from "../../utils";
+import {forward, getJSessionId, invalidateCache} from "../../utils";
 
 export async function onRequest({request, env}) {
     await invalidateCache(env, getJSessionId(request));
-    return forwardWithCache({request, env});
+    return forward({request, env});
 }
