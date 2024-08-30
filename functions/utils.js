@@ -21,10 +21,9 @@ export function getJSessionId(request) {
     return getCookie(request.headers.get('Cookie') || '', 'JSESSIONID');
 }
 
-export async function forwardWithCache({request, env}, bypassCache) {
+export async function forwardWithCache({request, env}, jSessionId, bypassCache) {
     try {
         const url = new URL(request.url)
-        const jSessionId = getJSessionId(request)
         if (jSessionId) { url.searchParams.set('JSESSIONID', jSessionId) }
         const cacheKey = url.toString();
         let body = env.CACHE_KEYS && await env.CACHE_KEYS.get(cacheKey)
