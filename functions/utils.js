@@ -55,6 +55,13 @@ export async function invalidateCache(env, filter= '', prefix= '') {
             console.warn('KV namespace CACHE_KEYS is not available.');
             return;
         }
+
+        try {
+            await env.INVALIDATE_QUEUE.send({filter, prefix});
+        } catch (e) {
+            console.error(e);
+        }
+
         let keys = await env.CACHE_KEYS.list({ prefix });
         if (keys.keys.length === 0) { console.log(`No cache found for prefix: ${prefix} and filter: ${filter}`) }
         await Promise.all(keys.keys.filter(k => !filter || k.name.includes(filter)).map(async k => {
