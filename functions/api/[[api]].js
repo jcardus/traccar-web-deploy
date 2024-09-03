@@ -1,7 +1,7 @@
 import {forward, forwardWithCache, getBaseUrl, getJSessionId, invalidateCache} from "../utils";
 export async function onRequest({request, params, env, functionPath}) {
     const jSessionId = getJSessionId(request);
-    if (request.method !== 'GET') {
+    if (request.method !== 'GET' && env.CACHE_KEYS) {
         console.log(`Invalidate path due to ${request.method} ${functionPath}`);
         await env.CACHE_KEYS.put(jSessionId, new Date().getTime())
         await invalidateCache(env, getBaseUrl(request.url, params.api[0]));

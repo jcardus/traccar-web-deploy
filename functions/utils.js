@@ -50,6 +50,7 @@ export async function forwardWithCache({request, env}, jSessionId, bypassCache) 
 
 export async function invalidateCache(env, filter= '', prefix= '') {
     try {
+        if (!env.CACHE_KEYS) { return }
         if (filter) {
             await env.CACHE_KEYS.put(filter, new Date().getTime())
         }
