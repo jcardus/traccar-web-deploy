@@ -252,9 +252,7 @@ export default () => {
     {
       id: 'custom',
       title: t('mapCustom'),
-      style: styleCustom({
-        tiles: [customMapUrl],
-      }),
+      style: customMapUrl,
       available: Boolean(customMapUrl),
     },
   ], [t, mapTilerKey, locationIqKey, bingMapsKey, tomTomKey, hereKey, mapboxAccessToken, customMapUrl]);
