@@ -31,7 +31,6 @@ const styleCustom = ({ tiles, minZoom, maxZoom, attribution }) => {
 export default () => {
   const t = useTranslation();
 
-  const googleKey = useAttributePreference('googleKey');
   const mapTilerKey = useAttributePreference('mapTilerKey');
   const locationIqKey = useAttributePreference('locationIqKey') || 'pk.0f147952a41c555a5b70614039fd148b';
   const bingMapsKey = useAttributePreference('bingMapsKey');
@@ -159,7 +158,7 @@ export default () => {
     {
       id: 'tomTomBasic',
       title: t('mapTomTomBasic'),
-      style: `https://api.tomtom.com/map/1/style/20.0.0-8/basic_main.json?key=${tomTomKey}`,
+      style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/arcgis/streets?token=${apiKey}`,
       available: Boolean(tomTomKey),
       attribute: 'tomTomKey',
     },
