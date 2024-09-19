@@ -165,7 +165,7 @@ export default () => {
     {
       id: 'hereBasic',
       title: t('mapHereBasic'),
-      style: `https://assets.vector.hereapi.com/styles/berlin/base/mapbox/tilezen?apikey=${hereKey}`,
+      style: `https://maps.geo.sa-east-1.amazonaws.com/maps/v0/maps/here-explore/style-descriptor?key=${hereKey}`,
       available: Boolean(hereKey),
       attribute: 'hereKey',
     },
