@@ -158,7 +158,7 @@ export default () => {
     {
       id: 'tomTomBasic',
       title: t('mapTomTomBasic'),
-      style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/arcgis/streets?token=${apiKey}`,
+      style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/arcgis/streets?token=${tomTomKey}`,
       available: Boolean(tomTomKey),
       attribute: 'tomTomKey',
     },
