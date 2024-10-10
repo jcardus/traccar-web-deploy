@@ -20,6 +20,8 @@ import pickupSvg from '../../resources/images/icon/pickup.svg';
 import planeSvg from '../../resources/images/icon/plane.svg';
 import scooterSvg from '../../resources/images/icon/scooter.svg';
 import shipSvg from '../../resources/images/icon/ship.svg';
+import startSvg from '../../resources/images/icon/start.svg';
+import finishSvg from '../../resources/images/icon/finish.svg';
 import tractorSvg from '../../resources/images/icon/tractor.svg';
 import trainSvg from '../../resources/images/icon/train.svg';
 import tramSvg from '../../resources/images/icon/tram.svg';
@@ -39,6 +41,7 @@ export const mapIcons = {
   camper: camperSvg,
   crane: craneSvg,
   default: defaultSvg,
+  finish: finishSvg,
   helicopter: helicopterSvg,
   motorcycle: motorcycleSvg,
   offroad: offroadSvg,
@@ -47,6 +50,7 @@ export const mapIcons = {
   plane: planeSvg,
   scooter: scooterSvg,
   ship: shipSvg,
+  start: startSvg,
   tractor: tractorSvg,
   train: trainSvg,
   tram: tramSvg,
