@@ -1,5 +1,5 @@
 #!/bin/bash
-git clone --depth 1 https://github.com/traccar/traccar-web || true
+git clone --depth 1 https://github.com/jcardus/traccar-web || true
 cp -vr src public traccar-web
 {
   echo "import './sentry.js';"
