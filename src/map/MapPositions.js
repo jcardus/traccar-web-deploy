@@ -113,7 +113,8 @@ const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleF
           'text-allow-overlap': true,
           'text-anchor': 'bottom',
           'text-offset': [0, -2 * iconScale],
-          'text-size': 12,
+          'text-size': 14,
+          'text-font': ['Noto Sans Regular'],
           'icon-rotate': ['get', 'rotation'],
         },
         paint: {
@@ -136,6 +137,7 @@ const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleF
           'icon-allow-overlap': true,
           'icon-rotate': ['get', 'rotation'],
           'icon-rotation-alignment': 'map',
+          'text-font': ['Noto Sans Regular']
         },
       });
 
@@ -153,6 +155,7 @@ const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleF
         'icon-size': iconScale,
         'text-field': '{point_count_abbreviated}',
         'text-size': 14,
+        'text-font': ['Noto Sans Regular']
       },
     });
 
