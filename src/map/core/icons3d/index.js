@@ -24,7 +24,7 @@ export const iconsRemote = {
     van: 'furgoneta_ventana_60'
 }
 
-export function getSVG(iconPath, height=50, width=50, viewBox="0 0 50 50") {
+export function getSVG(iconPath, height=60, width=60, viewBox="0 0 50 50") {
     return `
         <svg preserveaspectratio="none" height="${height}" width="${width}" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">            
             ${iconPath}
