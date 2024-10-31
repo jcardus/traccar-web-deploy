@@ -8,6 +8,7 @@ import { mapIconKey } from './core/preloadImages';
 import { useAttributePreference } from '../common/util/preferences';
 import { useCatchCallback } from '../reactHelper';
 import {icons} from "./core/icons3d";
+import { findFonts } from './core/mapUtil';
 
 const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleField }) => {
   const id = useId();
@@ -114,7 +115,7 @@ const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleF
           'text-anchor': 'bottom',
           'text-offset': [0, -2 * iconScale],
           'text-size': 14,
-          'text-font': ['Noto Sans Regular'],
+          'text-font': findFonts(map),
           'icon-rotate': ['get', 'rotation'],
         },
         paint: {
