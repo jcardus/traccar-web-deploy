@@ -8,7 +8,14 @@ import { mapIconKey } from './core/preloadImages';
 import { useAttributePreference } from '../common/util/preferences';
 import { useCatchCallback } from '../reactHelper';
 import {icons} from "./core/icons3d";
-import { findFonts } from './core/mapUtil';
+
+export const findFonts = (map) => {
+  const { glyphs } = map.getStyle();
+  if (glyphs.startsWith('https://tiles.openfreemap.org')) {
+    return ['Noto Sans Bold'];
+  }
+  return ['Open Sans Regular', 'Arial Unicode MS Regular'];
+};
 
 const MapPositions = ({ positions, onClick, showStatus, selectedPosition, titleField }) => {
   const id = useId();
