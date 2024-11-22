@@ -7,7 +7,7 @@ cp -vr src public traccar-web
 } > temp && mv temp traccar-web/src/index.jsx
 
 if [ -n "${LOGO_URL}" ]; then
-  curl "${LOGO_URL}" > traccar-web/public/logo.svg
+  curl -v "${LOGO_URL}" > traccar-web/public/logo.svg
 fi
 if [ -n "${LOGO_LARGE_URL}" ]; then
   curl "${LOGO_LARGE_URL}" > traccar-web/src/resources/images/logo.svg
